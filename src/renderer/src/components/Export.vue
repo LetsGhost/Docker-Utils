@@ -1,10 +1,8 @@
 <template>
   <div>
-    <button @click="goBack"></button>
     <p>Export image</p>
+    <button >Get images</button>
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>

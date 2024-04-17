@@ -3,6 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+import { exec, command } from 'child_process'
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -18,6 +20,17 @@ function createWindow() {
   })
 
   mainWindow.webContents.openDevTools({ mode: 'detach' })
+
+  ipcMain.on("getAllImages", () => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`)
+        return
+      }
+      console.log(`stdout: ${stdout}`)
+      console.error(`stderr: ${stderr}`)
+    })
+  });
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
