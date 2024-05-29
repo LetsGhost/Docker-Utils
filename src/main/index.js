@@ -3,7 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import { exec } from 'child_process'
+import Docker from 'dockerode'
+const docker = new Docker()
 
 function createWindow() {
   // Create the browser window.
@@ -22,15 +23,8 @@ function createWindow() {
   mainWindow.webContents.openDevTools({ mode: 'detach' })
 
   ipcMain.on('getAllImages', () => {
-    const command = "docker images --format '{{.Repository}}:{{.Tag}}'"
-
-    exec(command, (error, stdout) => {
-      if (error) {
-        console.error(`exec error: ${error}`)
-        return
-      }
-      console.log(`stdout: ${stdout}`)
-      mainWindow.webContents.send('allImages', stdout)
+    docker.listImages({ all: true }, (err, containers) => {
+      mainWindow.webContents.send('allImages', containers)
     })
   })
 
